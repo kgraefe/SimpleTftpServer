@@ -42,9 +42,12 @@ class Opcode(object):
         return data
     @classmethod
     def __interpret_rwrq(self, rawData):
-        dataSplit = rawData.split('\x00')
-        if (len(dataSplit) != 3): raise ClientError('InvalidCommand')
-        return {'filename': dataSplit[0], 'mode': dataSplit[1]}
+        dataSplit = rawData.split(b'\x00')
+        if (len(dataSplit) < 3): raise ClientError('InvalidCommand')
+        return {
+            'filename': dataSplit[0].decode('ascii'),
+            'mode': dataSplit[1].decode('ascii')
+        }
     @classmethod
     def __interpret_data(self, rawData):
         try:
